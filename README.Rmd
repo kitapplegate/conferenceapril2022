@@ -35,6 +35,7 @@ library(tm)
 library(tibble)
 library(lubridate)
 
+
 tweets.Conference <- read_csv("rawData/april22.csv")
 ```
 This Histogram show the number of tweets along a time line of Conference weekend. 

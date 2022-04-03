@@ -1,6 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # April 2022 General Conference of the Church of Jesus Christ of Latter-Day saints
 
 <!-- badges: start -->
