@@ -1,13 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# conferenceapril2022
+# April 2022 General Conference of the Church of Jesus Christ of Latter-Day saints
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-Quick Analysis of The Hash tag \#GeneralConference at the 2022 General
-Conference of the Church of Jesus Christ of Latter-Day saints.
+Quick Analysis of The Hash tag \#GeneralConference at the April 2022
+General Conference of the Church of Jesus Christ of Latter-Day saints.
 
 This Histogram show the number of tweets along a time line of Conference
 weekend.
