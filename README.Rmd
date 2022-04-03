@@ -80,3 +80,5 @@ ggplot(tweet_sentiment, aes(index, sentiment, fill = screen_name)) +
         axis.ticks.x=element_blank())
 ```
 
+
+Updated: 03APRIL2022 at 1735 EST
