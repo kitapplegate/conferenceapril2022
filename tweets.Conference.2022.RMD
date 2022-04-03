@@ -1,0 +1,67 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r warning=TRUE, include=FALSE}
+
+library(flextable)
+library(GGally)
+library(ggraph)
+library(gutenbergr)
+library(igraph)
+library(Matrix)
+library(network)
+library(quanteda)
+library(sna)
+library(tidygraph)
+library(tidyverse)
+library(tm)
+library(tibble)
+library(lubridate)
+
+source("tweets.Conference.2022.r")
+
+tweets.Conference <- read_csv("rawData/april22.csv")
+
+```
+
+```{r warning=FALSE}
+conference.Filtered <- tweets.Conference %>% 
+  filter(created_at >= "2022-04-02")
+
+ggplot(conference.Filtered, aes(x = created_at, fill = "orange")) +
+  geom_histogram(position = "identity", bins = 45, show.legend = FALSE)
+```
+
+```{r echo=FALSE, warning=FALSE}
+remove_reg <- "&amp;|&lt;|&gt;"
+
+tidy_tweets <- conference.Filtered %>% 
+  filter(!str_detect(text, "^RT")) %>%
+  mutate(text = str_remove_all(text, remove_reg)) %>%
+  unnest_tokens(word, text, token = "tweets") %>%
+  filter(!word %in% stop_words$word,
+         !word %in% str_remove_all(stop_words$word, "'"),
+         str_detect(word, "[a-z]"))
+
+tweet_sentiment <- tidy_tweets %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(screen_name, index = ...1 %/% 80, sentiment) %>%
+  pivot_wider(names_from = sentiment, values_from = n, values_fill = 0) %>% 
+  mutate(sentiment = positive - negative)
+
+ggplot(tweet_sentiment, aes(index, sentiment, fill = screen_name)) +
+  geom_col(show.legend = FALSE) +
+  labs(title = "Sentiment Analysis for tweets during April 2022 Gerernal Conference",
+       subtitle = "The Church of Jesus Christ of Latter-Day Saints", 
+       y = "If below 0 it is a negative response", 
+       x = "") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+  
+  
+```
+
+
