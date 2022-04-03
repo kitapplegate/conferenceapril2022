@@ -8,9 +8,7 @@ output: html_notebook
 library(flextable)
 library(GGally)
 library(ggraph)
-library(gutenbergr)
 library(igraph)
-library(Matrix)
 library(network)
 library(quanteda)
 library(sna)
@@ -19,8 +17,6 @@ library(tidyverse)
 library(tm)
 library(tibble)
 library(lubridate)
-
-source("tweets.Conference.2022.r")
 
 tweets.Conference <- read_csv("rawData/april22.csv")
 
