@@ -1,0 +1,76 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# conferenceapril2022
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+
+```{r Libraries, warning=FALSE, include=FALSE}
+library(flextable)
+library(GGally)
+library(ggraph)
+library(igraph)
+library(network)
+library(quanteda)
+library(sna)
+library(tidygraph)
+library(tidyverse)
+library(tm)
+library(tibble)
+library(lubridate)
+
+tweets.Conference <- read_csv("rawData/april22.csv")
+```
+
+You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
+
+You can also embed plots, for example:
+
+```{r Tweet Count Histogram, echo=}
+conference.Filtered <- tweets.Conference %>% 
+  filter(created_at >= "2022-04-02")
+
+ggplot(conference.Filtered, aes(x = created_at, fill = "orange")) +
+  geom_histogram(position = "identity", bins = 45, show.legend = FALSE)
+```
+
+```{r Tweet Sentiment, echo=FALSE, warning=FALSE}
+tidy_tweets <- conference.Filtered %>% 
+  filter(!str_detect(text, "^RT")) %>%
+  mutate(text = str_remove_all(text, remove_reg)) %>%
+  unnest_tokens(word, text, token = "tweets") %>%
+  filter(!word %in% stop_words$word,
+         !word %in% str_remove_all(stop_words$word, "'"),
+         str_detect(word, "[a-z]"))
+
+tweet_sentiment <- tidy_tweets %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(screen_name, index = ...1 %/% 80, sentiment) %>%
+  pivot_wider(names_from = sentiment, values_from = n, values_fill = 0) %>% 
+  mutate(sentiment = positive - negative)
+
+ggplot(tweet_sentiment, aes(index, sentiment, fill = screen_name)) +
+  geom_col(show.legend = FALSE) +
+  labs(title = "Sentiment Analysis for tweets during April 2022 Gerernal Conference",
+       subtitle = "The Church of Jesus Christ of Latter-Day Saints", 
+       y = "If below 0 it is a negative response", 
+       x = "") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+```
+
+
+In that case, don't forget to commit and push the resulting figure files, so they display on GitHub.
